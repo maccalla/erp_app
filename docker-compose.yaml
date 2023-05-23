@@ -7,6 +7,7 @@ services:
       dockerfile: ./front/Dockerfile
     ports:
       - "3000:3000"
+    command: sh -c 'cd front && yarn start'
     volumes:
       - ./front:/usr/src/app
     working_dir: /usr/src/app
@@ -51,7 +52,7 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:19.0.2
     container_name: keycloak
-    tty: true
+    tty: true # CLI画面の操作をできるようにする
     stdin_open: true
     ports:
       - "18080:8080" # 8080は被りやすいので別のポートに設定
