@@ -7,7 +7,7 @@ services:
       dockerfile: ./front/Dockerfile
     ports:
       - "3000:3000"
-    command: sh -c 'cd material-next-ts && npm run dev'
+    command: sh -c 'cd react-material-ui-sample && yarn start'
     volumes:
       - ./front:/usr/src/app
     working_dir: /usr/src/app
@@ -25,14 +25,14 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
-      # - ./db/data:/var/lib/postgresql/data # ローカルにマウントしてデータの永続化
-      - postgresql-local:/var/lib/postgresql/data # 名前付きボリュームを使う
+      - ./db/data:/var/lib/postgresql/data # ローカルにマウントしてデータの永続化
       - ./db/init:/docker-entrypoint-initdb.d # この配下にあるファイルを起動時に実行し初期設定・初期データの作成などを行う
   dbclient:
     container_name: pgadmin
     image: dpage/pgadmin4
     ports:
       - 8888:80
+    command: sleep infinity
     volumes:
       - ./dbclient/data:/var/lib/pgadmin
     environment:
@@ -41,7 +41,7 @@ services:
     depends_on:
       - db
   api:
-    image: eclipse-temurin:17
+    image: eclipse-temurin
     ports:
       - "8080:8080"
     volumes:
@@ -64,5 +64,3 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: passwd # 管理ユーザーのパスワードを設定
     command:
       - start-dev # 開発モードで起動
-volumes:
-  postgresql-local: # 名前付きボリュームを定義
